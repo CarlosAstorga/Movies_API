@@ -8,6 +8,25 @@ if ($_SERVER['REQUEST_METHOD']  == "POST") {
     $imdbid = validate($_POST['imdbid'])    ?? "";
     $type   = validate($_POST['type'])      ?? "";
     $plot   = validate($_POST['plot'])      ?? "";
+    $poster = $_FILES['poster']['tmp_name'] ? $_FILES['poster'] : "";
+
+    if (!empty($poster)) {
+        $fileExt            = explode('/', $poster['type'])[1];
+        $isImage            = getimagesize($poster['tmp_name']);
+        $allowedExtensions  = ['jpeg', 'jpg', 'png'];
+
+        if ($isImage === false) {
+            $errorBag['poster'] = "File is not an image";
+        } else if ($poster['size'] > 2000000) {
+            $errorBag['poster'] = "File too large";
+        } else if (!in_array($fileExt, $allowedExtensions)) {
+            $errorBag['poster'] = 'File extension not allowed';
+        } else {
+            $mime   = $poster['type'];
+            $base64 = base64_encode(file_get_contents($poster["tmp_name"]));
+            $poster = "data:$mime;base64,$base64";
+        }
+    }
 
     $types = ["Movie", "Serie", "Episode"];
 
@@ -47,7 +66,7 @@ function validate($data)
 </head>
 
 <body>
-    <form id="form" method="POST" action="form">
+    <form id="form" method="POST" action="form" enctype="multipart/form-data">
         <h1>New Movie</h1>
         <?php if (!empty($result) && $result['Response'] == 'True') : ?>
             <span class="alert success">
@@ -87,6 +106,17 @@ function validate($data)
                     <option value="Episode">Episode</option>
                 </select>
                 <?php if (!empty($errorBag['type'])) : ?> <span class="error"><?php echo $errorBag['type'] ?></span><?php endif ?>
+            </div>
+
+            <!-- Poster -->
+            <div class="input-group">
+                <small><span class="secondary">Max size 2MB</span></small>
+                <label for="fileInput">
+                    <i class="fas fa-file-upload"></i>
+                    <span class="file-name"> Upload poster</span>
+                </label>
+                <input type="file" name="poster" id="fileInput" accept=".jpg,.jpeg,.png">
+                <?php if (!empty($errorBag['poster'])) : ?> <span class="error"><?php echo $errorBag['poster'] ?></span><?php endif ?>
             </div>
         </div>
 

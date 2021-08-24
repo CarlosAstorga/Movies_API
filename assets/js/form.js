@@ -2,9 +2,11 @@ const form = document.getElementById("form");
 const year = document.getElementById("year");
 const closeIcon = document.getElementById("closeIcon");
 const yearInput = document.getElementById("year");
+const fileInput = document.getElementById("fileInput");
 const titleInput = document.getElementById("title");
 const imdbidInput = document.getElementById("imdbid");
 const typeSelector = document.getElementById("type");
+const fileInputText = document.querySelector(".file-name");
 
 year.addEventListener("keydown", (e) => {
 	if (!e.key.match(/^[\d\s-]+$/) && e.key != "Backspace") e.preventDefault();
@@ -19,6 +21,25 @@ if (closeIcon) {
 		target.parentElement.remove();
 	});
 }
+
+fileInput.addEventListener("change", () => {
+	const lastChild = fileInput.parentElement.lastElementChild;
+	if (lastChild.className == "error") lastChild.remove();
+
+	const { name, size } = fileInput.files[0];
+	const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+
+	let errorMsg = "";
+	if (!allowedExtensions.exec(name)) errorMsg = "File extension not allowed";
+	else if ((size / 1024 / 1024).toFixed(2) > 2) errorMsg = "File too large";
+	else fileInputText.textContent = name;
+
+	if (errorMsg) {
+		fileInput.value = "";
+		fileInputText.textContent = "Upload poster";
+		createError(fileInput, errorMsg);
+	}
+});
 
 form.addEventListener("submit", (e) => {
 	e.preventDefault();

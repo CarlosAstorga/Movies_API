@@ -15,6 +15,7 @@
 *::before,
 *::after {
 	box-sizing: border-box;
+	-webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -65,8 +66,38 @@ textarea {
 	padding: 0.5rem;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+	transition: background-color 600000s 0s, color 600000s 0s;
+}
+
+input[type="file"] {
+	display: none;
+}
+
+label[for="fileInput"] {
+	border-radius: 5px;
+	background-color: var(--primary-color);
+	display: block;
+	cursor: pointer;
+	height: 2.5rem;
+	width: 100%;
+	line-height: 2.5rem;
+	text-align: center;
+	padding: 0 0.5rem;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
 .input-group {
 	margin-top: 1rem;
+}
+
+.grid.columns .input-group:last-child {
+	overflow: hidden;
+	max-width: 100%;
+	white-space: nowrap;
 }
 
 .error {
@@ -121,7 +152,7 @@ textarea {
 		grid-column-gap: 1.5%;
 	}
 
-	.grid.columns {
-		grid-template-columns: repeat(3, 1fr);
+	.container.grid.columns {
+		grid-template-columns: repeat(4, 1fr);
 	}
 }
