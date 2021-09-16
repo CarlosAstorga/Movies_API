@@ -103,6 +103,22 @@ footer {
 	font-size: 12px;
 }
 
+.alert {
+	padding: 10px 15px;
+	margin: 0 0 1rem;
+	display: flex;
+}
+
+.alert.success {
+	color: #f8f8f8;
+	background-color: #09c372;
+}
+
+.alert.warning {
+	color: #f8f8f8;
+	background-color: #f1962e;
+}
+
 @media screen and (max-width: 767px) {
 	main {
 		width: 100vw;
