@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if ($password !== $confirmPassword) $errorBag['password']   = "The passwords don't match";
 
     if (empty($errorBag)) {
-        $url            = "";
+        $url            = "https://astorga-api-movies.herokuapp.com/register";
         $credentials    = [
             'Name'              => $name,
             'User'              => $email,
