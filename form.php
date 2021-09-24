@@ -1,5 +1,6 @@
 <?php
 
+session_start();
 $errorBag   = [];
 
 if ($_SERVER['REQUEST_METHOD']  == "POST") {
@@ -42,6 +43,32 @@ if ($_SERVER['REQUEST_METHOD']  == "POST") {
     empty($type) ?
         $errorBag['type']       = "Field required"      : (!in_array($type, $types) ?
             $errorBag['type']   = "Option not allowed"  : null);
+
+    if (empty($errorBag)) {
+        $url                    = 'https://astorga-api-movies.herokuapp.com/movies';
+        $movie                  = [
+            'Title'             => $title,
+            'Year'              => $year,
+            'Type'              => $type,
+            'Plot'              => $plot,
+            'Token'             => $_SESSION["Token"]
+        ];
+
+        if (!empty($imdbid))    $movie['imdbID'] = "tt$imdbid";
+
+        $resource   = curl_init();
+        curl_setopt_array($resource, [
+            CURLOPT_URL             => $url,
+            CURLOPT_RETURNTRANSFER  => true,
+            CURLOPT_POST            => true,
+            CURLOPT_HTTPHEADER      => ['content-type: application/json'],
+            CURLOPT_POSTFIELDS      => json_encode($movie)
+        ]);
+
+        $result     = curl_exec($resource);
+        curl_close($resource);
+        $result     = json_decode($result, true);
+    }
 }
 
 function validate($data)
