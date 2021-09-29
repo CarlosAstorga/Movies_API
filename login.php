@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if (empty($password)) $errorBag['password'] = 'Password field required';
 
     if (empty($errorBag)) {
-        $url            = "";
+        $url            = "https://astorga-api-movies.herokuapp.com/auth";
         $credentials    = [
             'User'      => $user,
             'Password'  => $password
